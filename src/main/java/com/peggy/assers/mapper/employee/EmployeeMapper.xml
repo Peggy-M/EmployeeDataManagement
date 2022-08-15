@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.peggy.assers.mapper.employee.EmployeeMapper">
+
+    <resultMap id="data_employees" type="employee">
+        <result property="id" column="id"/>
+        <result property="last_name" column="last_name"/>
+        <result property="email" column="email"/>
+        <result property="department" column="department"/>
+        <result property="gender" column="gender"/>
+        <result property="birth" column="birth"/>
+        <association property="data_department" javaType="department">
+            <result property="id" column="did"/>
+            <result property="department_name" column="department_name"/>
+        </association>
+    </resultMap>
+
+    <select id="getAllEmployee" resultMap="data_employees">
+        select e.id id, e.last_name, e.email, e.gender,d.department_name, e.birth,
+               d.id did,  e.department
+        from employee e , department d where e.department=d.id
+    </select>
+
+    <select id="delEmployeeById" parameterType="int">
+        delete from employee where id=#{id}
+    </select>
+
+    <select id="addEmployee" parameterType="employee">
+        insert into employee(last_name, email, gender, department, birth)
+        values (#{last_name},#{email},#{gender},#{department},#{birth})
+    </select>
+
+    <select id="getEmployeeById" parameterType="int" resultType="employee">
+        select id,last_name,email,gender,department,birth from  employee where id=#{id}
+    </select>
+
+    <update id="updateEmpEmployeeById" parameterType="employee">
+        update employee
+        set last_name=#{last_name}, email=#{email}, gender=#{gender}, department=#{department}, birth=#{birth}
+        where id=#{id}
+    </update>
+</mapper>
